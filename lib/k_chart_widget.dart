@@ -143,7 +143,7 @@ class _KChartWidgetState extends State<KChartWidget>  with SingleTickerProviderS
 
   void notifyChanged() => setState(() {});
 
-  List<String> infoNames = ["时间", "开", "高", "低", "收", "涨跌额", "涨幅", "成交量"];
+  List<String> infoNames = ["Date", "Open", "High", "Low", "Close", "Change", "Change%", "Amount"];
   List infos;
 
   Widget _buildInfoDialog() {
@@ -206,6 +206,6 @@ class _KChartWidgetState extends State<KChartWidget>  with SingleTickerProviderS
   }
 
   String getDate(int date) {
-    return dateFormat(DateTime.fromMillisecondsSinceEpoch(date * 1000), [yy, '-', mm, '-', dd, ' ', HH, ':', nn]);
+    return dateFormat(DateTime.fromMillisecondsSinceEpoch(date * 1000), [yyyy, '-', mm, '-', dd, ' ', HH, ':', nn]);
   }
 }

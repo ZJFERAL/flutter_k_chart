@@ -58,10 +58,10 @@ abstract class BaseChartPainter extends CustomPainter {
     int time = secondTime - firstTime;
     //月线
     if (time >= 24 * 60 * 60 * 28)
-      mFormats = [yy, '-', mm];
+      mFormats = [yyyy, '-', mm];
     //日线等
     else if (time >= 24 * 60 * 60)
-      mFormats = [yy, '-', mm, '-', dd];
+      mFormats = [yyyy, '-', mm, '-', dd];
     //小时线等
     else
       mFormats = [mm, '-', dd, ' ', HH, ':', nn];
