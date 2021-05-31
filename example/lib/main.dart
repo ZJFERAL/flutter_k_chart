@@ -32,12 +32,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<KLineEntity> datas;
+  List<KLineEntity> datas = [];
   bool showLoading = true;
   MainState _mainState = MainState.MA;
   SecondaryState _secondaryState = SecondaryState.MACD;
   bool isLine = true;
-  List<DepthEntity> _bids, _asks;
+  List<DepthEntity> _bids = [], _asks = [];
 
   @override
   void initState() {
@@ -46,16 +46,22 @@ class _MyHomePageState extends State<MyHomePage> {
     rootBundle.loadString('assets/depth.json').then((result) {
       final parseJson = json.decode(result);
       Map tick = parseJson['tick'];
-      var bids = tick['bids'].map((item) => DepthEntity(item[0], item[1])).toList().cast<DepthEntity>();
-      var asks = tick['asks'].map((item) => DepthEntity(item[0], item[1])).toList().cast<DepthEntity>();
+      var bids = tick['bids']
+          .map((item) => DepthEntity(item[0], item[1]))
+          .toList()
+          .cast<DepthEntity>();
+      var asks = tick['asks']
+          .map((item) => DepthEntity(item[0], item[1]))
+          .toList()
+          .cast<DepthEntity>();
       initDepth(bids, asks);
     });
   }
 
   void initDepth(List<DepthEntity> bids, List<DepthEntity> asks) {
     if (bids == null || asks == null || bids.isEmpty || asks.isEmpty) return;
-    _bids = List();
-    _asks = List();
+    _bids = [];
+    _asks = [];
     double amount = 0.0;
     bids?.sort((left, right) => left.price.compareTo(right.price));
     //倒序循环 //累加买入委托量
@@ -98,7 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             if (showLoading)
               Container(
-                  width: double.infinity, height: 450, alignment: Alignment.center, child: CircularProgressIndicator()),
+                  width: double.infinity,
+                  height: 450,
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator()),
           ]),
           buildButtons(),
           Container(
@@ -145,15 +154,20 @@ class _MyHomePageState extends State<MyHomePage> {
         button("1month", onPressed: () async {
 //              showLoading = true;
 //              setState(() {});
-              //getData('1mon');
-              String result = await rootBundle.loadString('assets/kmon.json');
-              Map parseJson = json.decode(result);
-              List list = parseJson['data'];
-              datas = list.map((item) => KLineEntity.fromJson(item)).toList().reversed.toList().cast<KLineEntity>();
-              DataUtil.calculate(datas);
+          //getData('1mon');
+          String result = await rootBundle.loadString('assets/kmon.json');
+          Map parseJson = json.decode(result);
+          List list = parseJson['data'];
+          datas = list
+              .map((item) => KLineEntity.fromJson(item))
+              .toList()
+              .reversed
+              .toList()
+              .cast<KLineEntity>();
+          DataUtil.calculate(datas);
         }),
         FlatButton(
-            onPressed: (){
+            onPressed: () {
               showLoading = true;
               setState(() {});
               getData('1day');
@@ -176,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
         color: Colors.blue);
   }
 
-  void getData(String period) async {
+  getData(String period) async {
     String result;
     try {
       result = await getIPAddress('$period');
@@ -186,7 +200,12 @@ class _MyHomePageState extends State<MyHomePage> {
     } finally {
       Map parseJson = json.decode(result);
       List list = parseJson['data'];
-      datas = list.map((item) => KLineEntity.fromJson(item)).toList().reversed.toList().cast<KLineEntity>();
+      datas = list
+          .map((item) => KLineEntity.fromJson(item))
+          .toList()
+          .reversed
+          .toList()
+          .cast<KLineEntity>();
       DataUtil.calculate(datas);
       showLoading = false;
       setState(() {});
@@ -195,7 +214,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<String> getIPAddress(String period) async {
     //火币api，需要翻墙
-    var url = 'https://api.huobi.br.com/market/history/kline?period=${period ?? '1day'}&size=300&symbol=btcusdt';
+    var url =
+        'https://api.huobi.br.com/market/history/kline?period=${period ?? '1day'}&size=300&symbol=btcusdt';
     String result;
     var response = await http.get(url).timeout(Duration(seconds: 7));
     if (response.statusCode == 200) {
